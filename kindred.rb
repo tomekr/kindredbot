@@ -42,9 +42,9 @@ client.on :message do |data|
       puts "A parsing error occured 8/"
       puts e.inspect
     end
-  when /what'*s in a (.+)/ then
+  when /what'*s in a ([^\?]+)\?/ then
     puts "received what's in a request #{ data['text'] }"
-    if (cocktail_name = data['text'].match(/what'*s in a ([^\?]+)\?/))
+    if (cocktail_name = data['text'].match(/what'*s in a ([^\?]+)\?/)[1])
       recipe = get_named_cocktail(cocktail_name)
       client.message channel: data['channel'], text: recipe
     end
