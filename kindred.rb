@@ -46,10 +46,15 @@ client.on :message do |data|
   # way but you forced my hand.
   when /what.{0,1}s in a ([^\?]+)\?/ then
     puts "received what's in a request #{ data['text'] }"
-    if (cocktail_name = data['text'].match(/what.{0,1}s in a ([^\?]+)\?/)[1])
-      puts "looking up recipe for #{cocktail_name}"
-      recipe = get_named_cocktail(cocktail_name)
-      client.message channel: data['channel'], text: recipe
+    begin
+      if (cocktail_name = data['text'].match(/what.{0,1}s in a ([^\?]+)\?/)[1])
+        puts "looking up recipe for #{cocktail_name}"
+        recipe = get_named_cocktail(cocktail_name)
+        client.message channel: data['channel'], text: recipe
+      end
+    rescue
+      puts "A parsing error occured 8/"
+      puts e.inspect
     end
   end
 end
