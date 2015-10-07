@@ -15,7 +15,7 @@ def get_kindred_cocktail(url)
 end
 
 def get_named_cocktail(name)
-  normalized_name = name.strip.downcase.gsub(' ', '-').delete('^a-zA-Z-')
+  normalized_name = name.strip.downcase.gsub(' ', '-').delete('^a-zA-Z-0-9')
 
   puts "looking up recipe for #{normalized_name}"
   url = 'http://www.kindredcocktails.com/cocktail/' + normalized_name
