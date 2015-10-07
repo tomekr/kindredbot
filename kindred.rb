@@ -15,7 +15,10 @@ def get_kindred_cocktail(url)
 end
 
 def get_named_cocktail(name)
-  url = 'http://www.kindredcocktails.com/cocktail/' + name.strip.downcase.gsub(' ', '-').delete('^a-zA-Z-')
+  normalized_name = name.strip.downcase.gsub(' ', '-').delete('^a-zA-Z-')
+
+  puts "looking up recipe for #{normalized_name}"
+  url = 'http://www.kindredcocktails.com/cocktail/' + normalized_name
   get_kindred_cocktail(url)
 end
 
@@ -48,7 +51,6 @@ client.on :message do |data|
     puts "received what's in a request #{ data['text'] }"
     begin
       if (cocktail_name = data['text'].match(/what.{0,1}s in a ([^\?]+)\?/)[1])
-        puts "looking up recipe for #{cocktail_name}"
         recipe = get_named_cocktail(cocktail_name)
         client.message channel: data['channel'], text: recipe
       end
