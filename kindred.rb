@@ -34,29 +34,32 @@ client.on :hello do
 end
 
 client.on :message do |data|
-  case data['text'].downcase
-  when /http:\/\/www\.kindredcocktails\.com/ then
-    begin
-      if (url = data['text'].match(/<(http:\/\/www\.kindredcocktails\.com.+)>/)[1])
-        recipe = get_kindred_cocktail(url)
-        client.message channel: data['channel'], text: recipe
+  # It may be possible that you get a message with no text
+  if data['text']
+    case data['text'].downcase
+    when /http:\/\/www\.kindredcocktails\.com/ then
+      begin
+        if (url = data['text'].match(/<(http:\/\/www\.kindredcocktails\.com.+)>/)[1])
+          recipe = get_kindred_cocktail(url)
+          client.message channel: data['channel'], text: recipe
+        end
+      rescue Exception => e
+        puts "A parsing error occured 8/"
+        puts e.inspect
       end
-    rescue Exception => e
-      puts "A parsing error occured 8/"
-      puts e.inspect
-    end
-  # .{0,1} is because of directional apostrophes. I didn't want it to be this
-  # way but you forced my hand.
-  when /what.?s in an? ([^\?]+)\?/ then
-    puts "received what's in a request #{ data['text'] }"
-    begin
-      if (cocktail_name = data['text'].downcase.match(/what.?s in an? ([^\?]+)\?/)[1])
-        recipe = get_named_cocktail(cocktail_name)
-        client.message channel: data['channel'], text: recipe
+    # .{0,1} is because of directional apostrophes. I didn't want it to be this
+    # way but you forced my hand.
+    when /what.?s in an? ([^\?]+)\?/ then
+      puts "received what's in a request #{ data['text'] }"
+      begin
+        if (cocktail_name = data['text'].downcase.match(/what.?s in an? ([^\?]+)\?/)[1])
+          recipe = get_named_cocktail(cocktail_name)
+          client.message channel: data['channel'], text: recipe
+        end
+      rescue Exception => e
+        puts "A parsing error occured 8/"
+        puts e.inspect
       end
-    rescue Exception => e
-      puts "A parsing error occured 8/"
-      puts e.inspect
     end
   end
 end
