@@ -2,9 +2,9 @@ require 'slack-ruby-client'
 require 'mechanize'
 require 'uri'
 
-def get_kindred_cocktail(url)
-  mechanize = Mechanize.new
+mechanize = Mechanize.new
 
+def get_kindred_cocktail(url)
   page = mechanize.get(URI(url))
 
   cocktail_name = page.at('#page-title').text.strip
@@ -13,6 +13,11 @@ def get_kindred_cocktail(url)
   puts cocktail_name + recipe
 
   return cocktail_name + recipe
+end
+
+def get_named_cocktail(name)
+  url = 'http://www.kindredcocktails.com/cocktail/' + name.strip.downcase.gsub(' ', '-')
+  get_kindred_cocktail(url)
 end
 
 Slack.configure do |config|
@@ -37,6 +42,10 @@ client.on :message do |data|
     rescue Exception => e
       puts "A parsing error occured 8/"
       puts e.inspect
+    end
+  when /what'*s in a (.+)/ then
+    if (cocktail_name = data['text'].match(/what'*s in a ([^\?]+)\?/))
+      get_named_cocktail(cocktail_name)
     end
   end
 end
