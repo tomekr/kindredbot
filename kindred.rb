@@ -15,7 +15,7 @@ def get_kindred_cocktail(url)
 end
 
 def get_named_cocktail(name)
-  url = 'http://www.kindredcocktails.com/cocktail/' + name.strip.downcase.gsub(' ', '-')
+  url = 'http://www.kindredcocktails.com/cocktail/' + name.strip.downcase.gsub(' ', '-'),gsub("'", "")
   get_kindred_cocktail(url)
 end
 
