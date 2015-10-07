@@ -34,7 +34,7 @@ client.on :hello do
 end
 
 client.on :message do |data|
-  case data['text']
+  case data['text'].downcase
   when /http:\/\/www\.kindredcocktails\.com/ then
     begin
       if (url = data['text'].match(/<(http:\/\/www\.kindredcocktails\.com.+)>/)[1])
@@ -47,10 +47,10 @@ client.on :message do |data|
     end
   # .{0,1} is because of directional apostrophes. I didn't want it to be this
   # way but you forced my hand.
-  when /what.{0,1}s in a ([^\?]+)\?/ then
+  when /what.?s in an? ([^\?]+)\?/ then
     puts "received what's in a request #{ data['text'] }"
     begin
-      if (cocktail_name = data['text'].match(/what.{0,1}s in a ([^\?]+)\?/)[1])
+      if (cocktail_name = data['text'].downcase.match(/what.?s in an? ([^\?]+)\?/)[1])
         recipe = get_named_cocktail(cocktail_name)
         client.message channel: data['channel'], text: recipe
       end
