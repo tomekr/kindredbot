@@ -44,8 +44,10 @@ client.on :message do |data|
       puts e.inspect
     end
   when /what'*s in a (.+)/ then
+    puts "received what's in a request #{ data['text'] }"
     if (cocktail_name = data['text'].match(/what'*s in a ([^\?]+)\?/))
-      get_named_cocktail(cocktail_name)
+      recipe = get_named_cocktail(cocktail_name)
+      client.message channel: data['channel'], text: recipe
     end
   end
 end
