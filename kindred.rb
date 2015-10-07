@@ -54,7 +54,7 @@ client.on :message do |data|
         recipe = get_named_cocktail(cocktail_name)
         client.message channel: data['channel'], text: recipe
       end
-    rescue
+    rescue Exception => e
       puts "A parsing error occured 8/"
       puts e.inspect
     end
