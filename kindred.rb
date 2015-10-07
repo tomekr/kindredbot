@@ -2,9 +2,8 @@ require 'slack-ruby-client'
 require 'mechanize'
 require 'uri'
 
-mechanize = Mechanize.new
-
 def get_kindred_cocktail(url)
+  mechanize = Mechanize.new
   page = mechanize.get(URI(url))
 
   cocktail_name = page.at('#page-title').text.strip
