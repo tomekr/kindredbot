@@ -2,6 +2,12 @@ require 'slack-ruby-client'
 require 'mechanize'
 require 'uri'
 
+DRINKS = [ "Jager Bomb\n\n1/2 can Red Bull\n2 oz Jagermeister", 
+           "Angry Balls\n\n2 oz Fireball Whisky\n1 pint Angry Orchard Apple Hard Cider", 
+           "Irish Car Bomb\n\n3/4 pint Guinness\n1 oz Bailey's Irish Cream\n1 oz Jameson Irish whiskey",
+           "Long Island Iced Tea\n\n1 oz Vodka\n1 oz Gin\n1 oz White Rum\n1 oz White Tequila\n1/2 oz Triple Sec\n2 tbsp Lemon Juice\n1/2 cup Cola",
+           "Toilet Duck\n\n2 oz Vodka\n1 bottle Smirnoff Ice\n1 bottle WKD Blue"]
+
 def get_kindred_cocktail(url)
   mechanize = Mechanize.new
   page = mechanize.get(URI(url))
@@ -52,7 +58,9 @@ client.on :message do |data|
     when /what.?s in an? ([^\?]+)\?/ then
       puts "received what's in a request #{ data['text'] }"
       begin
-        if (cocktail_name = data['text'].downcase.match(/what.?s in an? ([^\?]+)\?/)[1])
+        if data["user"] == "marcinw"
+          client.message channel: data['channel'], text: DRINKS.sample
+        elsif (cocktail_name = data['text'].downcase.match(/what.?s in an? ([^\?]+)\?/)[1])
           recipe = get_named_cocktail(cocktail_name)
           client.message channel: data['channel'], text: recipe
         end
