@@ -67,6 +67,9 @@ client.on :message do |data|
       rescue Exception => e
         puts "A parsing error occured 8/"
         puts e.inspect
+
+        cocktail_name = data['text'].downcase.match(/what.?s in an? ([^\?]+)\?/)[1]
+        client.message channel: data['channel'], text: "Sorry, I couldnt find a cocktail with the name #{cocktail_name}"
       end
     end
   end
